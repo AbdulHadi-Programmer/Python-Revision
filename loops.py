@@ -14,17 +14,22 @@ name = "Abdul Hadi"
 
 # range is a builtin function
 # [start : stop: step] and start % End is Excluding
-'''
-for k in range(5):
+
+# For Loop: It is based on iteration
+print("1st K loop: ")
+for k in range(5):   # Run 5 times
     print(k + 1)
 
-for k in range(1, 9):
+print("2nd K loop: ")
+for k in range(1, 9):  # Run until i become 9.
     print(k)
 
+print("Table Example loop: ")
 # print the table calculator
 for i in range(0, 20, 2):
     print(i+2)
 
+print("While Loops Topic Started:- ")
 ## While Loops:
 for i in range(3):
     print(i)
@@ -36,8 +41,8 @@ while (i<=38):
     print(i)
     
 print("Loops Body End")
-'''
 
+'''
 # decrement while loop
 count = 5
 # Condition: count is equal to 0, when condition is true then 
@@ -53,3 +58,4 @@ while True:
     i += 1
     if (i%100 ==0):
         break
+'''
