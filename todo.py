@@ -7,72 +7,67 @@ task1 = {'task_name': 'Complete Project Proposal', 'deadline': '2024-03-15', 'st
 task2 = {'task_name': 'Review Code Changes', 'deadline': '2024-03-10', 'status': 1}
 task3 = {'task_name': 'Prepare Presentation', 'deadline': '2024-03-20', 'status': 0}
 task4 = {'task_name': 'Submit Weekly Report', 'deadline': '2024-03-12', 'status': 0}
+task5 = {'task_name': 'Create Monthly Budget', 'deadline': '2024-03-25', 'status': 1}
+task6 = {'task_name': 'Read New Book', 'deadline': '2024-04-05', 'status': 1}
+task7 = {'task_name': 'Attend Team Meeting', 'deadline': '2024-03-18', 'status': 0}
 
-tasks_list_u = [task1, task3, task4] # _u mean uncompleted task 
-task_list_c = [task2]   # _c mean completed Task
-all_task = tasks_list_u + task_list_c  # All task double list
+all_task = [task1 , task2 , task3 , task4 , task5 , task6 , task7]  # All task double list
+# Lists to store tasks, u for uncompleted, c for completed
+task_list_u = [task for task in all_task if task['status'] == 0]
+task_list_c = [task for task in all_task if task['status'] == 1]
+
 
 def add():
-    """
-    Add New Task --name, date, status
-    Every task is a dictionary that is then append into a new list
-    """
+    global all_task, task_list_c, tasks_list_u
     name = input("Enter the Task: ")
-    date = input("Enter the Deadline: ")
+    deadline = input("Enter the Deadline: ")
     status = int(input("Enter 1 if it is Completed and 0 for Remaining: "))
-    user_dict = {"Name": name, "Date": date, "Status": status}
-    tasks_list_u.append(user_dict)
+    new_task = {'task_name': name, 'deadline': deadline, 'status': status}
+    all_task.append(new_task)
 
-def remove():
-    """
-    Remove the task
-    """
-    r = int(input("Enter the index number: "))
-    removing_item = r - 1
-    # Check if the index is within the valid range
-    if 0 <= removing_item < len(task_list_c):
-        removed_task = task_list_c.pop(removing_item)
-        print(f"Removed task: {removed_task}")
-        print("Updated List:")
-        for i, task in enumerate(task_list_c, start=1):
-            print(f"{i}. {task}")
+    if status == 1:
+        task_list_c.append(new_task)
     else:
-        print("Invalid index. Please enter a valid index.")
-    
+        task_list_u.append(new_task)
 
-def update_status(tasks_list_u):
+ 
+def update_status(all_task, task_list_u):
     """
     Update the status of a task in the task list.
 
     Parameters:
-    - task_list (list): The list containing dictionaries of tasks.
-    - task_index (int): The index (1-based) of the task to be updated.
-    - new_status (int): The new status value (0 or 1) for the task.
+    - all_task (list): The list containing dictionaries of all tasks.
+    - task_list_u (list): The list containing dictionaries of incompleted tasks.
 
     Returns:
     - None
     """
     # Display the current task list
     print("Current Task List:")
-    for i, task in enumerate(tasks_list_u, start=1):
+    for i, task in enumerate(task_list_u, start=1):
         print(f"{i}. {task['task_name']} (Status: {task['status']})")
 
     # Get user input for the task index and new status
     task_index = int(input("Enter the index of the task to update: "))
     new_status = int(input("Enter the new status (0 or 1): "))
 
-    # # Call the update_status function
-    # update_status(tasks_list_u, task_index, new_status)
+    # Remove the old version of the task from all_task
+    old_task = task_list_u.pop(task_index - 1)
+    all_task.remove(old_task)
 
+    # Update the status of the selected task in both all_task and task_list_u
+    old_task['status'] = new_status
+    task_list_u.append(old_task)
+    all_task.append(old_task)
+    
     # Display the updated task list
     print("\nUpdated Task List:")
-    for i, task in enumerate(tasks_list_u, start=1):
+    for i, task in enumerate(task_list_u, start=1):
         print(f"{i}. {task['task_name']} (Status: {task['status']})")
-    pass
-    # new_status = input("Enter the Current Status: ")
 
 
-def showAllTasksWithDetails(all_tasks):
+
+def showAllTasksWithDetails(all_task):
     """
     Display all tasks with details.
 
@@ -82,16 +77,16 @@ def showAllTasksWithDetails(all_tasks):
     Returns:
     - None
     """
-    if not all_tasks:
+    if not all_task:
         print("No tasks to display.")
     else:
-        for i, task in enumerate(all_tasks, start=1):
+        for i, task in enumerate(all_task, start=1):
             print(f"{i}. Task Name: {task['task_name']}")
             print(f"   Deadline: {task['deadline']}")
             print(f"   Status: {task['status']}")
             print("")
 
-def deleteTask(all_tasks):
+def deleteTask(all_task):
     """
     Display tasks and allow the user to delete a selected task.
 
@@ -102,13 +97,13 @@ def deleteTask(all_tasks):
     - None
     """
     print("Select a task to delete:")
-    showAllTasksWithDetails(all_tasks)
+    showAllTasksWithDetails(all_task)
 
     try:
         choice = int(input("Enter the index of the task to delete (0 to cancel): "))
         
-        if 0 < choice <= len(all_tasks):
-            deleted_task = all_tasks.pop(choice - 1)
+        if 0 < choice <= len(all_task):
+            deleted_task = all_task.pop(choice - 1)
             print(f"Task '{deleted_task['task_name']}' has been deleted.")
         elif choice == 0:
             print("Operation canceled.")
@@ -117,7 +112,7 @@ def deleteTask(all_tasks):
     except ValueError:
         print("Invalid input. Please enter a number.")
 
-def showTask(all_tasks):
+def showTask(all_task):
     """
     Display tasks based on user-selected options.
 
@@ -136,13 +131,13 @@ def showTask(all_tasks):
 
     if option == 1:
         print("\nAll Tasks:")
-        display_tasks(all_tasks)
+        display_tasks(all_task)
     elif option == 2:
-        print("Completed Tasks:")
+        print("\nCompleted Tasks:")
         display_tasks(task_list_c)
     elif option == 3:
-        print("Incompleted Tasks:")
-        display_tasks(tasks_list_u)
+        print("\nIncompleted Tasks:")
+        display_tasks(task_list_u)
     else:
         print("Invalid option. Please enter a valid choice (1, 2, or 3).")
 
@@ -161,48 +156,28 @@ def display_tasks(task_list):
         print("No tasks to display.")
     else:
         for i, task in enumerate(task_list, start=1):
-            print(f"{i}. {task['task_name']} (Status: {task['status']})")
-
-
-def deleteTask(all_tasks):
-    """
-    Display tasks and allow the user to delete a selected task.
-
-    Parameters:
-    - all_tasks (list): The list containing dictionaries of all tasks.
-
-    Returns:
-    - None
-    """
-    print("Select a task to delete:")
-    showAllTasksWithDetails(all_tasks)
-
-    try:
-        choice = int(input("Enter the index of the task to delete (0 to cancel): "))
-        
-        if 0 < choice <= len(all_tasks):
-            deleted_task = all_tasks.pop(choice - 1)
-            print(f"Task '{deleted_task['task_name']}' has been deleted.")
-        elif choice == 0:
-            print("Operation canceled.")
-        else:
-            print("Invalid index. Please enter a valid index.")
-    except ValueError:
-        print("Invalid input. Please enter a number.")
+            task_name = task.get('task_name') or task.get('Name', 'N/A')
+            status = all_task[all_task.index(task)]['status']  # Get the status from all_task
+            print(f"{i}. Task Name: {task_name}")
+            print(f"   Status: {status}")
+            print("")
 
 
 
-while True:
-    choice = int(input("Enter The Number:\n1) Add Task \n2) Remove Task \n3) Update Task \n4) Delete \n5) Show Task\n*) Option:- "))
-    if choice == 1:
+
+while (True):
+    choice = int(input("Enter The Number:\n1) Add Task \n2) Remove Task \n3) Update Task \n4) Delete \n5) Show Task\n6) Show All Task With Detail\n*) Option:- "))
+    if (choice == 1):
         add()
-    elif choice == 2:
-        remove()
-    elif choice == 3:
-        update_status()
-    elif choice == 4:
-        deleteTask(all_task)  # No update to the list
-    elif choice == 5:
-        showTask(all_task)
+    elif (choice == 2):
+        pass
+    elif (choice == 3):
+        update_status(all_task, task_list_u)
+    elif (choice == 4):
+        deleteTask(all_task)
+    elif (choice == 5):
+        showTask(all_task)  # In this function, when we select option 1 display all then doesnot show the newly added task
+    elif (choice == 6):
+        showAllTasksWithDetails(all_task) # new added task not showing 
     else:
         break
