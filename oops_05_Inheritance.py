@@ -9,7 +9,7 @@ class Employee:
         print(f"The name of Employee: {self.id} is {self.name}")
 
 # Make another class that contain all method and var of above class
-# Employee is a part of 
+# Employee is a part of Programmer:
 class Programmer(Employee):
     def showLanguage(self):
         print("The default Language is Python")

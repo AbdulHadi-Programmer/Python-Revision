@@ -30,7 +30,7 @@ def add():
     else:
         task_list_u.append(new_task)
 
- 
+'''
 def update_status(all_task, task_list_u):
     """
     Update the status of a task in the task list.
@@ -57,9 +57,63 @@ def update_status(all_task, task_list_u):
 
     # Update the status of the selected task in both all_task and task_list_u
     old_task['status'] = new_status
-    task_list_u.append(old_task)
+    task_list_c.append(old_task)
     all_task.append(old_task)
     
+    # Display the updated task list
+    print("\nUpdated Task List:")
+    for i, task in enumerate(task_list_u, start=1):
+        print(f"{i}. {task['task_name']} (Status: {task['status']})")
+
+'''
+def update_status(all_task, task_list_u, task_list_c):
+    """
+    Update the status of a task in the task list.
+
+    Parameters:
+    - all_task (list): The list containing dictionaries of all tasks.
+    - task_list_u (list): The list containing dictionaries of incompleted tasks.
+    - task_list_c (list): The list containing dictionaries of completed tasks.
+
+    Returns:
+    - None
+    """
+    # Display the current task list
+    print("Current Task List:")
+    for i, task in enumerate(task_list_u, start=1):
+        print(f"{i}. {task['task_name']} (Status: {task['status']})")
+
+    # Get user input for the task index
+    while True:
+        try:
+            task_index = int(input("Enter the index of the task to update: "))
+            if 1 <= task_index <= len(task_list_u):
+                break
+            else:
+                print("Invalid index. Please enter a valid index.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+    # Get user input for the new status
+    while True:
+        try:
+            new_status = int(input("Enter the new status (0 or 1): "))
+            if new_status in [0, 1]:
+                break
+            else:
+                print("Invalid status. Please enter 0 or 1.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+    # Remove the old version of the task from all_task
+    old_task = task_list_u.pop(task_index - 1)
+    all_task.remove(old_task)
+
+    # Update the status of the selected task in both all_task and task_list_u
+    old_task['status'] = new_status
+    task_list_c.append(old_task)
+    all_task.append(old_task)
+
     # Display the updated task list
     print("\nUpdated Task List:")
     for i, task in enumerate(task_list_u, start=1):
@@ -101,9 +155,17 @@ def deleteTask(all_task):
 
     try:
         choice = int(input("Enter the index of the task to delete (0 to cancel): "))
-        
         if 0 < choice <= len(all_task):
             deleted_task = all_task.pop(choice - 1)
+            
+            # Check if the deleted task is in task_list_u and remove it
+            if deleted_task in task_list_u:
+                task_list_u.remove(deleted_task)
+            
+            # Check if the deleted task is in task_list_c and remove it
+            elif deleted_task in task_list_c:
+                task_list_c.remove(deleted_task)
+            
             print(f"Task '{deleted_task['task_name']}' has been deleted.")
         elif choice == 0:
             print("Operation canceled.")
@@ -157,27 +219,28 @@ def display_tasks(task_list):
     else:
         for i, task in enumerate(task_list, start=1):
             task_name = task.get('task_name') or task.get('Name', 'N/A')
-            status = all_task[all_task.index(task)]['status']  # Get the status from all_task
+            status = task['status']  # Get the status directly from the task dictionary
             print(f"{i}. Task Name: {task_name}")
             print(f"   Status: {status}")
             print("")
 
 
-
-
-while (True):
-    choice = int(input("Enter The Number:\n1) Add Task \n2) Remove Task \n3) Update Task \n4) Delete \n5) Show Task\n6) Show All Task With Detail\n*) Option:- "))
-    if (choice == 1):
-        add()
-    elif (choice == 2):
-        pass
-    elif (choice == 3):
-        update_status(all_task, task_list_u)
-    elif (choice == 4):
-        deleteTask(all_task)
-    elif (choice == 5):
-        showTask(all_task)  # In this function, when we select option 1 display all then doesnot show the newly added task
-    elif (choice == 6):
-        showAllTasksWithDetails(all_task) # new added task not showing 
-    else:
-        break
+while True:
+    try:
+        choice = int(input("Enter The Number:\n1) Add Task \n2) Update Task \n3) Delete Task \n4) Show Task\n5) Show All Task With Detail\n6) Exit The Program\n*) Option:- "))
+        if choice == 1:
+            add()
+        elif choice == 2:
+            update_status(all_task, task_list_u, task_list_c)
+        elif choice == 3:
+            deleteTask(all_task, task_list_u, task_list_c)
+        elif choice == 4:
+            showTask(all_task)
+        elif choice == 5:
+            showAllTasksWithDetails(all_task)
+        elif choice == 6:
+            break
+        else:
+            print("Invalid choice. Please enter a valid option.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")

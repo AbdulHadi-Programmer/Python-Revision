@@ -30,3 +30,19 @@ print(b.name, b.occupation) # object.var in print, print the var
 a.info() # a.info call the function of a class, where "a" is a object and ".info()" is method from a class
 b.info()
 c.info() # 'c' is default object , template of class
+
+# Revision of OOPs:
+# Car is a Class
+class Car:
+    def __init__(self, make, model):
+        self.make = make
+        self.model = model
+        
+    def display_info(self):
+        print(f"{self.make} {self.model}")
+
+car1 = Car("Toyota", "Camry")        
+car2 = Car("Honda", "Accord")        
+
+car1.display_info()
+car2.display_info()
